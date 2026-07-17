@@ -43,7 +43,7 @@ export default function HomePage() {
             <span className="leaf-badge inline-block bg-mint px-4 py-1.5 pl-3 text-xs font-bold text-forest">
               ১০০% প্রাকৃতিক খাদ্যপণ্য
             </span>
-            <h1 className="mt-5 max-w-lg font-display text-4xl font-medium leading-tight sm:text-5xl">
+            <h1 className="font-bangla mt-5 max-w-lg text-4xl font-semibold leading-tight sm:text-5xl">
               আপনার সুস্থ ও নিরাপদ জীবনের সঙ্গী
             </h1>
             <p className="mt-4 max-w-md text-white/70">
