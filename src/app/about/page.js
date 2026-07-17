@@ -1,4 +1,5 @@
 import { BRAND_INTRO, CONTACT_INFO } from "@/lib/policyContent";
+import TeamSection from "@/components/TeamSection";
 
 export const metadata = { title: "About Us — Purebreed" };
 
@@ -14,6 +15,10 @@ export default function AboutPage() {
         <p className="font-bangla mt-4 whitespace-pre-line text-base leading-relaxed text-ink/80">
           {BRAND_INTRO}
         </p>
+      </div>
+
+      <div className="mx-auto max-w-5xl">
+        <TeamSection />
       </div>
     </div>
   );
