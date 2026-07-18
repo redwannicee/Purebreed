@@ -58,9 +58,9 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto aspect-square w-full max-w-sm">
+          <div className="relative mx-auto w-full max-w-lg">
             <div className="absolute inset-0 rounded-full bg-mint/10 blur-3xl" />
-            <div className="relative h-full w-full overflow-hidden rounded-xl2 bg-forest-400 shadow-card">
+            <div className="relative aspect-video w-full overflow-hidden rounded-xl2 bg-forest-400 shadow-card">
               <video
                 className="h-full w-full object-cover"
                 src="/hero-showcase.mp4"
