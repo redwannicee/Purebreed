@@ -77,12 +77,12 @@ export default function HomePage() {
 
       {/* Trust badges */}
       <section className="border-b border-forest/10 bg-white">
-        <div className="container-px grid grid-cols-2 gap-6 py-8 sm:grid-cols-4">
+        <div className="container-px grid grid-cols-2 gap-8 py-12 sm:grid-cols-4">
           {TRUST_BADGES.map((b) => (
-            <div key={b.title_en} className="flex flex-col items-center gap-1 text-center">
-              <span className="text-2xl">{b.icon}</span>
-              <span className="text-xs font-semibold text-ink">{b.title_en}</span>
-              <span className="font-bangla text-xs text-ink/50">{b.title_bn}</span>
+            <div key={b.title_en} className="flex flex-col items-center gap-2 text-center">
+              <span className="text-5xl">{b.icon}</span>
+              <span className="text-base font-bold text-ink sm:text-lg">{b.title_en}</span>
+              <span className="font-bangla text-sm text-ink/50">{b.title_bn}</span>
             </div>
           ))}
         </div>
