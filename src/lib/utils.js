@@ -3,6 +3,21 @@ export function formatBDT(amount) {
   return `৳${value.toLocaleString("en-BD")}`;
 }
 
+// Google Drive "share" links point at Drive's HTML viewer page, not the raw
+// image bytes — an <img> tag can't render that. This detects the common
+// share-link shapes and rewrites them to a direct-image URL instead.
+export function normalizeImageUrl(url) {
+  if (!url) return url;
+  const trimmed = url.trim();
+  const driveMatch = trimmed.match(
+    /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([a-zA-Z0-9_-]{20,})/
+  );
+  if (driveMatch) {
+    return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+  }
+  return trimmed;
+}
+
 export const CATEGORIES = [
   { id: "spices", label_en: "Spices", label_bn: "মসলা" },
   { id: "oil", label_en: "Oils", label_bn: "তেল" },

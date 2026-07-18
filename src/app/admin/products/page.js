@@ -8,7 +8,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "@/lib/products";
-import { CATEGORIES, formatBDT } from "@/lib/utils";
+import { CATEGORIES, formatBDT, normalizeImageUrl } from "@/lib/utils";
 
 const EMPTY_FORM = {
   name_en: "",
@@ -43,6 +43,7 @@ export default function AdminProductsPage() {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [imagePreviewError, setImagePreviewError] = useState(false);
 
   async function refresh() {
     setLoading(true);
@@ -61,6 +62,7 @@ export default function AdminProductsPage() {
     setForm(EMPTY_FORM);
     setEditingId(null);
     setError("");
+    setImagePreviewError(false);
     setShowForm(true);
   }
 
@@ -74,6 +76,7 @@ export default function AdminProductsPage() {
     });
     setEditingId(product.id);
     setError("");
+    setImagePreviewError(false);
     setShowForm(true);
   }
 
@@ -227,10 +230,42 @@ export default function AdminProductsPage() {
               <label className="mb-1 block text-xs font-semibold text-ink/70">Image URL</label>
               <input
                 className="input-field"
-                placeholder="https://firebasestorage.googleapis.com/..."
+                placeholder="Paste any public image link (Google Drive share links are auto-fixed)"
                 value={form.imageUrl}
-                onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
+                onChange={(e) => {
+                  setForm((f) => ({ ...f, imageUrl: normalizeImageUrl(e.target.value) }));
+                  setImagePreviewError(false);
+                }}
               />
+              <p className="mt-1 text-xs text-ink/40">
+                Tip: a Google Drive "share" link gets auto-converted to a direct-image link.
+                Make sure the file is shared as <strong>&quot;Anyone with the link&quot;</strong>.
+              </p>
+              {form.imageUrl && (
+                <div className="mt-2 flex items-center gap-3">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-forest/15 bg-sage-100">
+                    {imagePreviewError ? (
+                      <span className="text-lg" title="Couldn't load this image">
+                        ⚠️
+                      </span>
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={form.imageUrl}
+                        alt="Preview"
+                        className="h-full w-full object-cover"
+                        onError={() => setImagePreviewError(true)}
+                        onLoad={() => setImagePreviewError(false)}
+                      />
+                    )}
+                  </div>
+                  <p className={`text-xs ${imagePreviewError ? "font-semibold text-red-600" : "text-ink/50"}`}>
+                    {imagePreviewError
+                      ? "Couldn't load this image — check the link is public and points directly at an image file."
+                      : "Live preview — this is what customers will see."}
+                  </p>
+                </div>
+              )}
             </div>
             <div className="sm:col-span-2">
               <label className="mb-1 block text-xs font-semibold text-ink/70">Description (Bangla)</label>
