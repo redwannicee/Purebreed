@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
 import { getActiveProducts, getRnDProducts } from "@/lib/products";
@@ -43,7 +42,7 @@ export default function HomePage() {
             <span className="leaf-badge inline-block bg-mint px-4 py-1.5 pl-3 text-xs font-bold text-forest">
               ১০০% প্রাকৃতিক খাদ্যপণ্য
             </span>
-            <h1 className="mt-5 max-w-lg font-display text-4xl font-medium leading-tight sm:text-5xl">
+            <h1 className="font-bangla mt-5 max-w-lg text-4xl font-semibold leading-tight sm:text-5xl">
               আপনার সুস্থ ও নিরাপদ জীবনের সঙ্গী
             </h1>
             <p className="mt-4 max-w-md text-white/70">
@@ -61,13 +60,15 @@ export default function HomePage() {
           </div>
           <div className="relative mx-auto aspect-square w-full max-w-sm">
             <div className="absolute inset-0 rounded-full bg-mint/10 blur-3xl" />
-            <div className="relative flex h-full items-center justify-center rounded-xl2 bg-white/5 p-10 backdrop-blur">
-              <Image
-                src="/logo-purebreed-dark.png"
-                alt="Purebreed"
-                width={280}
-                height={140}
-                className="w-full max-w-xs"
+            <div className="relative h-full w-full overflow-hidden rounded-xl2 bg-forest-400 shadow-card">
+              <video
+                className="h-full w-full object-cover"
+                src="/hero-showcase.mp4"
+                poster="/logo-purebreed-dark.png"
+                autoPlay
+                muted
+                loop
+                playsInline
               />
             </div>
           </div>
