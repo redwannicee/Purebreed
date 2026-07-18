@@ -7,6 +7,8 @@ export const CATEGORIES = [
   { id: "spices", label_en: "Spices", label_bn: "মসলা" },
   { id: "oil", label_en: "Oils", label_bn: "তেল" },
   { id: "pickle", label_en: "Pickles", label_bn: "আচার" },
+  { id: "paste", label_en: "Pastes", label_bn: "পেস্ট" },
+  { id: "marinade", label_en: "Marinades", label_bn: "ম্যারিনেড" },
   { id: "drinks", label_en: "Healthy Drinks", label_bn: "স্বাস্থ্যকর পানীয়" },
   { id: "grocery", label_en: "Grocery", label_bn: "মুদি পণ্য" },
 ];
