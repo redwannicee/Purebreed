@@ -39,7 +39,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-forest text-white">
         <div className="container-px grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
           <div>
-            <span className="leaf-badge inline-block bg-mint px-4 py-1.5 pl-3 text-xs font-bold text-forest">
+            <span className="leaf-badge inline-block bg-leaf px-4 py-1.5 text-xs font-bold text-white">
               ১০০% প্রাকৃতিক খাদ্যপণ্য
             </span>
             <h1 className="font-bangla mt-5 max-w-lg text-4xl font-semibold leading-tight sm:text-5xl">
