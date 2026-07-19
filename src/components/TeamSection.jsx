@@ -1,10 +1,10 @@
 const TEAM = [
   {
-    name: "Team Member Name",
+    name: "Md Redwan Rashid Nice",
     name_bn: "নাম",
     role_en: "Founder & CEO",
     role_bn: "প্রতিষ্ঠাতা ও সিইও",
-    initials: "TM",
+    initials: "RN",
   },
   {
     name: "Team Member Name",
