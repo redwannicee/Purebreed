@@ -137,9 +137,9 @@ export default function HomePage() {
                   key={p?.id || i}
                   className="card relative flex flex-col overflow-hidden border-dashed p-4 opacity-90"
                 >
-                  <span className="absolute right-3 top-3 rounded-full bg-forest px-2 py-0.5 text-[10px] font-bold text-white">
-                    Coming soon
-                  </span>
+                  <span className="absolute right-3 top-3 z-10 rounded-full bg-forest px-2 py-0.5 text-[10px] font-bold text-white">
+  Coming soon
+</span>
                   {loading ? (
                     <div className="aspect-square animate-pulse rounded-lg bg-sage-100" />
                   ) : (
