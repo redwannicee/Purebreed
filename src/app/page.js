@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
 import { getActiveProducts, getRnDProducts } from "@/lib/products";
@@ -143,8 +144,18 @@ export default function HomePage() {
                     <div className="aspect-square animate-pulse rounded-lg bg-sage-100" />
                   ) : (
                     <>
-                      <div className="flex aspect-square items-center justify-center rounded-lg bg-sage-100 text-3xl">
-                        🧪
+                      <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-sage-100 text-3xl">
+                        {p.imageUrl ? (
+                          <Image
+                            src={p.imageUrl}
+                            alt={p.name_en}
+                            fill
+                            sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          "🧪"
+                        )}
                       </div>
                       <p className="mt-3 text-sm font-semibold">{p.name_en}</p>
                       <p className="font-bangla text-xs text-ink/50">{p.name_bn}</p>
