@@ -67,6 +67,7 @@ export default function Footer() {
           <h3 className="text-sm font-bold uppercase tracking-wide text-mint">Quick links</h3>
           <ul className="mt-4 space-y-2 text-sm text-white/70">
             <li><Link href="/products" className="hover:text-white">Products</Link></li>
+            <li><Link href="/wholesale" className="hover:text-white">Wholesale</Link></li>
             <li><Link href="/about" className="hover:text-white">About Us</Link></li>
             <li><Link href="/terms" className="hover:text-white">Terms &amp; Conditions</Link></li>
             <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>

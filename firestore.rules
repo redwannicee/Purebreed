@@ -41,5 +41,17 @@ service cloud.firestore {
       allow read, update: if isAdmin();
       allow delete: if false; // keep an audit trail; cancel via status instead
     }
+
+    match /wholesale_requests/{requestId} {
+      // B2B quote requests: same pattern as orders — anyone (no login) can
+      // submit one, but only the admin can read the list back, since it
+      // contains a phone number and company name.
+      allow create: if request.resource.data.keys().hasAll(
+                        ['name','phone','partnershipType','status']
+                      )
+                    && request.resource.data.status == 'new';
+      allow read, update: if isAdmin();
+      allow delete: if false;
+    }
   }
 }

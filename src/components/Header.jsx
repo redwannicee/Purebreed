@@ -8,6 +8,7 @@ import { useCart } from "@/context/CartContext";
 const NAV_LINKS = [
   { href: "/products", label_en: "Products", label_bn: "পণ্যসমূহ" },
   { href: "/products?rnd=1", label_en: "Coming Soon", label_bn: "আসছে শীঘ্রই" },
+  { href: "/wholesale", label_en: "Wholesale", label_bn: "পাইকারি" },
   { href: "/about", label_en: "About", label_bn: "আমাদের সম্পর্কে" },
   { href: "/contact", label_en: "Contact", label_bn: "যোগাযোগ" },
 ];
