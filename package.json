@@ -15,7 +15,6 @@
     "firebase": "^10.12.4",
     "lucide-react": "^0.383.0"
   },
-  },
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.40",
