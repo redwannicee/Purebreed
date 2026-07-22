@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { Leaf } from "lucide-react";
 
 export default function AdminLoginPage() {
   const { login, user, loading } = useAuth();
@@ -34,7 +35,7 @@ export default function AdminLoginPage() {
     <div className="container-px flex min-h-[70vh] items-center justify-center py-14">
       <form onSubmit={handleSubmit} className="card w-full max-w-sm space-y-4 p-6">
         <div className="text-center">
-          <span className="text-2xl">🌿</span>
+          <Leaf className="mx-auto text-leaf" size={30} />
           <h1 className="mt-2 text-xl font-semibold">Purebreed Admin</h1>
           <p className="text-xs text-ink/50">Sign in to manage products &amp; orders</p>
         </div>

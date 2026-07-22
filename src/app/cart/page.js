@@ -2,87 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, Leaf, ShieldCheck, ShoppingBag, Trash2, Truck } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatBDT } from "@/lib/utils";
 
-export default function CartPage() {
-  const { items, subtotal, removeItem, setQty } = useCart();
-
-  if (items.length === 0) {
-    return (
-      <div className="container-px flex flex-col items-center gap-4 py-24 text-center">
-        <span className="text-4xl">🧺</span>
-        <p className="font-bangla text-ink/60">আপনার কার্ট খালি আছে</p>
-        <Link href="/products" className="btn-primary">
-          কেনাকাটা শুরু করুন
-        </Link>
-      </div>
-    );
-  }
-
-  return (
-    <div className="container-px py-10">
-      <h1 className="mb-6 text-2xl font-medium">Your Cart <span className="font-bangla text-base text-ink/50">· কার্ট</span></h1>
-
-      <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-3">
-          {items.map((item) => (
-            <div key={item.productId} className="card flex items-center gap-4 p-3">
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-sage-100">
-                {item.imageUrl ? (
-                  <Image src={item.imageUrl} alt={item.name_en} fill className="object-cover" />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-xl">🌿</div>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold">{item.name_en}</p>
-                <p className="font-bangla truncate text-xs text-ink/50">{item.name_bn}</p>
-                <p className="text-sm font-semibold text-leaf">{formatBDT(item.price)}</p>
-              </div>
-              <div className="flex items-center rounded-full border border-forest/15">
-                <button
-                  type="button"
-                  onClick={() => setQty(item.productId, item.qty - 1)}
-                  className="px-3 py-1 text-base"
-                  aria-label="Decrease quantity"
-                >
-                  −
-                </button>
-                <span className="w-6 text-center text-sm">{item.qty}</span>
-                <button
-                  type="button"
-                  onClick={() => setQty(item.productId, item.qty + 1)}
-                  className="px-3 py-1 text-base"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={() => removeItem(item.productId)}
-                className="text-ink/40 hover:text-red-500"
-                aria-label={`Remove ${item.name_en}`}
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <div className="card h-fit p-5">
-          <h2 className="font-semibold">Order summary</h2>
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <span className="text-ink/60">Subtotal</span>
-            <span className="font-semibold">{formatBDT(subtotal)}</span>
-          </div>
-          <p className="mt-1 text-xs text-ink/40">Delivery fee calculated at checkout.</p>
-          <Link href="/checkout" className="btn-primary mt-5 w-full">
-            চেকআউট করুন
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+export default function CartPage(){
+  const {items,subtotal,removeItem,setQty}=useCart();
+  const remaining=Math.max(0,1500-subtotal);
+  if(!items.length)return <div className="container-px flex flex-col items-center py-24 text-center"><ShoppingBag size={50} className="text-leaf/35"/><h1 className="mt-5 text-2xl font-semibold text-forest">Your cart is ready for something good</h1><p className="font-bangla mt-2 text-ink/55">আপনার কার্ট এখনো খালি</p><Link href="/products" className="btn-primary mt-6">Start shopping <ArrowRight size={17}/></Link></div>;
+  return <div className="container-px py-10 sm:py-14"><p className="eyebrow">Review your basket</p><h1 className="section-title mt-2">Shopping cart</h1><div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]"><div className="space-y-3">{items.map((item)=><article key={item.productId} className="card flex gap-4 p-4"><div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-sage-100">{item.imageUrl?<Image src={item.imageUrl} alt={item.name_en} fill className="object-cover"/>:<div className="flex h-full items-center justify-center"><Leaf size={30} className="text-leaf/30"/></div>}</div><div className="min-w-0 flex-1"><div className="flex justify-between gap-3"><div><h2 className="font-bold text-forest">{item.name_en}</h2><p className="font-bangla text-xs text-ink/45">{item.name_bn}</p><p className="mt-1 text-sm font-extrabold text-leaf">{formatBDT(item.price)}</p></div><button type="button" onClick={()=>removeItem(item.productId)} className="h-fit rounded-full p-2 text-ink/35 hover:bg-red-50 hover:text-red-500" aria-label={`Remove ${item.name_en}`}><Trash2 size={17}/></button></div><div className="mt-3 flex w-fit items-center rounded-full border border-forest/15"><button onClick={()=>setQty(item.productId,item.qty-1)} className="px-3 py-1" aria-label="Decrease quantity">−</button><span className="w-7 text-center text-sm font-bold">{item.qty}</span><button onClick={()=>setQty(item.productId,item.qty+1)} className="px-3 py-1" aria-label="Increase quantity">+</button></div></div></article>)}</div><aside className="h-fit space-y-5 lg:sticky lg:top-28"><div className="card p-6"><h2 className="text-lg font-bold text-forest">Order summary</h2><div className="mt-5 flex justify-between text-sm text-ink/60"><span>Subtotal</span><span className="font-bold text-ink">{formatBDT(subtotal)}</span></div><div className="mt-2 flex justify-between text-sm text-ink/60"><span>Delivery</span><span>Calculated next</span></div><div className="mt-5 border-t border-forest/10 pt-5"><div className="flex justify-between font-bold"><span>Estimated total</span><span className="text-xl text-leaf">{formatBDT(subtotal)}</span></div><p className="mt-1 text-xs text-ink/40">Delivery fee not included.</p></div><Link href="/checkout" className="btn-primary mt-6 w-full">Secure checkout <ArrowRight size={17}/></Link></div><div className="rounded-2xl bg-sage-100 p-5">{remaining>0?<p className="text-sm font-bold text-forest">Add {formatBDT(remaining)} more for free delivery</p>:<p className="text-sm font-bold text-leaf">You unlocked free delivery</p>}<div className="mt-3 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-leaf" style={{width:`${Math.min(100,(subtotal/1500)*100)}%`}}/></div></div><div className="flex justify-center gap-5 text-xs font-bold text-ink/50"><span className="flex items-center gap-1"><ShieldCheck size={15}/>Secure checkout</span><span className="flex items-center gap-1"><Truck size={15}/>Fast delivery</span></div></aside></div></div>;
 }

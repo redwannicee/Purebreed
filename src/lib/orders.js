@@ -15,7 +15,7 @@ import {
   limit as fsLimit,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, isFirebaseConfigured } from "./firebase";
 
 const ordersRef = collection(db, "orders");
 
@@ -46,9 +46,11 @@ export async function createOrder({ customer, deliveryMethod, items, deliveryFee
     total,
     payment,
     notes: notes || "",
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+    createdAt: isFirebaseConfigured ? serverTimestamp() : new Date().toISOString(),
+    updatedAt: isFirebaseConfigured ? serverTimestamp() : new Date().toISOString(),
   };
+
+  if (!isFirebaseConfigured) return { id: `local-${Date.now()}`, ...order };
 
   const docRef = await addDoc(ordersRef, order);
   return { id: docRef.id, ...order };
@@ -57,6 +59,7 @@ export async function createOrder({ customer, deliveryMethod, items, deliveryFee
 // --- Admin-only below ---
 
 export async function getOrders({ status, pageLimit = 50 } = {}) {
+  if (!isFirebaseConfigured) return [];
   const clauses = [];
   if (status && status !== "all") clauses.push(where("status", "==", status));
   const q = query(ordersRef, ...clauses, orderBy("createdAt", "desc"), fsLimit(pageLimit));
@@ -80,6 +83,7 @@ export async function updateOrderStatus(id, status) {
 // per 1000 matched index entries, not one read per document — far cheaper
 // than fetching every order just to count them.
 export async function countOrdersByStatus(status) {
+  if (!isFirebaseConfigured) return 0;
   const q = status ? query(ordersRef, where("status", "==", status)) : ordersRef;
   const snap = await getCountFromServer(q);
   return snap.data().count;

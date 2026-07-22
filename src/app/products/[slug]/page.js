@@ -1,119 +1,21 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { Check, ChevronRight, Heart, Leaf, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from "lucide-react";
 import { getProductBySlug } from "@/lib/products";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { formatBDT } from "@/lib/utils";
 
-export default function ProductDetailPage() {
-  const { slug } = useParams();
-  const router = useRouter();
-  const { addItem } = useCart();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [qty, setQty] = useState(1);
-  const [added, setAdded] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    getProductBySlug(slug)
-      .then((p) => active && setProduct(p))
-      .finally(() => active && setLoading(false));
-    return () => {
-      active = false;
-    };
-  }, [slug]);
-
-  if (loading) {
-    return <div className="container-px py-16 text-center text-sm text-ink/50">Loading…</div>;
-  }
-
-  if (!product) {
-    return (
-      <div className="container-px flex flex-col items-center gap-3 py-20 text-center">
-        <p className="text-lg font-semibold">পণ্যটি খুঁজে পাওয়া যায়নি</p>
-        <button onClick={() => router.push("/products")} className="btn-primary">
-          সব পণ্য দেখুন
-        </button>
-      </div>
-    );
-  }
-
-  const hasDiscount = product.discountPrice && product.discountPrice < product.price;
-
-  return (
-    <div className="container-px py-10">
-      <div className="grid gap-10 md:grid-cols-2">
-        <div className="card relative aspect-square overflow-hidden bg-sage-100">
-          {product.imageUrl ? (
-            <Image src={product.imageUrl} alt={product.name_en} fill className="object-cover" />
-          ) : (
-            <div className="flex h-full items-center justify-center text-6xl">🌿</div>
-          )}
-        </div>
-
-        <div>
-          <p className="font-bangla text-sm text-ink/50">{product.name_bn}</p>
-          <h1 className="mt-1 text-3xl font-medium">{product.name_en}</h1>
-          {product.unit && <p className="mt-1 text-sm text-ink/50">{product.unit}</p>}
-
-          <div className="mt-4 flex items-center gap-3">
-            <span className="text-2xl font-bold text-leaf">
-              {formatBDT(hasDiscount ? product.discountPrice : product.price)}
-            </span>
-            {hasDiscount && (
-              <span className="text-lg text-ink/40 line-through">{formatBDT(product.price)}</span>
-            )}
-          </div>
-
-          {(product.description_bn || product.description_en) && (
-            <div className="mt-6 space-y-2">
-              {product.description_bn && (
-                <p className="font-bangla text-sm leading-relaxed text-ink/70">{product.description_bn}</p>
-              )}
-              {product.description_en && (
-                <p className="text-sm leading-relaxed text-ink/60">{product.description_en}</p>
-              )}
-            </div>
-          )}
-
-          <div className="mt-8 flex items-center gap-4">
-            <div className="flex items-center rounded-full border border-forest/15">
-              <button
-                type="button"
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="px-4 py-2 text-lg"
-                aria-label="Decrease quantity"
-              >
-                −
-              </button>
-              <span className="w-8 text-center text-sm font-semibold">{qty}</span>
-              <button
-                type="button"
-                onClick={() => setQty((q) => q + 1)}
-                className="px-4 py-2 text-lg"
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-            </div>
-            <button
-              type="button"
-              disabled={product.stock <= 0}
-              onClick={() => {
-                addItem(product, qty);
-                setAdded(true);
-                setTimeout(() => setAdded(false), 2000);
-              }}
-              className="btn-primary flex-1"
-            >
-              {product.stock > 0 ? (added ? "কার্টে যোগ হয়েছে ✓" : "কার্টে যোগ করুন") : "স্টক নেই"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+export default function ProductDetailPage(){
+  const {slug}=useParams(); const {addItem}=useCart(); const {has,toggle}=useWishlist();
+  const [product,setProduct]=useState(null); const [loading,setLoading]=useState(true); const [qty,setQty]=useState(1); const [added,setAdded]=useState(false);
+  useEffect(()=>{getProductBySlug(slug).then(setProduct).finally(()=>setLoading(false));},[slug]);
+  if(loading)return <div className="container-px py-24 text-center text-sm text-ink/50">Loading product…</div>;
+  if(!product)return <div className="container-px py-24 text-center"><h1 className="text-2xl font-semibold text-forest">Product not found</h1><Link href="/products" className="btn-primary mt-6">Return to shop</Link></div>;
+  const discounted=product.discountPrice&&product.discountPrice<product.price; const saved=has(product.id);
+  return <div className="container-px py-8 sm:py-12"><div className="mb-6 flex items-center gap-2 text-xs text-ink/45"><Link href="/products" className="hover:text-leaf">Shop</Link><ChevronRight size={13}/><span>{product.category}</span><ChevronRight size={13}/><span className="truncate">{product.name_en}</span></div><div className="grid gap-10 lg:grid-cols-2"><div className="relative aspect-square overflow-hidden rounded-[2rem] bg-gradient-to-br from-sage-100 to-[#e2ebdc]">{product.imageUrl?<Image src={product.imageUrl} alt={product.name_en} fill className="object-cover" priority/>:<div className="flex h-full items-center justify-center"><Leaf size={100} strokeWidth={1} className="text-leaf/25"/></div>}</div><div className="lg:py-4"><div className="flex items-center gap-1 text-sm font-bold text-turmeric"><Star size={16} fill="currentColor"/><span>4.8</span><button className="ml-1 font-medium text-ink/40 underline underline-offset-4">24 reviews</button></div><p className="font-bangla mt-4 text-sm text-ink/45">{product.name_bn}</p><h1 className="mt-1 text-4xl font-semibold leading-tight text-forest sm:text-5xl">{product.name_en}</h1><div className="mt-5 flex items-center gap-3"><span className="text-3xl font-extrabold text-leaf">{formatBDT(discounted?product.discountPrice:product.price)}</span>{discounted&&<span className="text-lg text-ink/35 line-through">{formatBDT(product.price)}</span>}<span className="rounded-full bg-sage-100 px-3 py-1 text-xs font-bold text-forest">{product.unit||"per pack"}</span></div><p className="mt-6 leading-7 text-ink/60">{product.description_en||"Carefully sourced and packed to keep its natural flavour fresh for your everyday cooking."}</p>{product.description_bn&&<p className="font-bangla mt-2 leading-7 text-ink/55">{product.description_bn}</p>}<div className="mt-7 flex items-center gap-3"><div className="flex h-12 items-center rounded-full border border-forest/15 bg-white"><button onClick={()=>setQty(Math.max(1,qty-1))} className="px-4" aria-label="Decrease quantity"><Minus size={16}/></button><span className="w-8 text-center text-sm font-bold">{qty}</span><button onClick={()=>setQty(qty+1)} className="px-4" aria-label="Increase quantity"><Plus size={16}/></button></div><button disabled={product.stock<=0} onClick={()=>{addItem(product,qty);setAdded(true);setTimeout(()=>setAdded(false),1800)}} className="btn-primary flex-1">{added?<><Check size={18}/>Added to cart</>:<><ShoppingBag size={18}/>{product.stock>0?"Add to cart":"Out of stock"}</>}</button><button onClick={()=>toggle(product)} className={`flex h-12 w-12 items-center justify-center rounded-full border ${saved?"border-red-200 bg-red-50 text-red-500":"border-forest/15 text-forest"}`} aria-label="Save to wishlist"><Heart size={19} fill={saved?"currentColor":"none"}/></button></div><div className="mt-7 grid grid-cols-2 gap-3 border-t border-forest/10 pt-6 text-xs font-bold text-ink/55"><span className="flex items-center gap-2"><Truck size={18} className="text-leaf"/>Delivery in 1–5 days</span><span className="flex items-center gap-2"><ShieldCheck size={18} className="text-leaf"/>Secure payment</span></div><div className="mt-7 rounded-2xl bg-sage-100 p-5"><h2 className="font-bold text-forest">Why you’ll love it</h2><ul className="mt-3 space-y-2 text-sm text-ink/60"><li className="flex gap-2"><Check size={17} className="shrink-0 text-leaf"/>Clear ingredients and careful sourcing</li><li className="flex gap-2"><Check size={17} className="shrink-0 text-leaf"/>Packed to protect flavour and freshness</li><li className="flex gap-2"><Check size={17} className="shrink-0 text-leaf"/>Responsive support if anything is not right</li></ul></div></div></div></div>;
 }

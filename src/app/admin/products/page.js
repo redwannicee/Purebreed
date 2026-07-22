@@ -313,7 +313,7 @@ export default function AdminProductsPage() {
                 checked={form.isRnD}
                 onChange={(e) => setForm((f) => ({ ...f, isRnD: e.target.checked }))}
               />
-              Future / R&amp;D product
+              R&amp;D product (sellable in the R&amp;D collection)
             </label>
           </div>
 

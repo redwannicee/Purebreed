@@ -2,6 +2,7 @@ import { Fraunces, Manrope, Hind_Siliguri, JetBrains_Mono } from "next/font/goog
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -31,22 +32,39 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Purebreed — আপনার সুস্থ ও নিরাপদ জীবনের সঙ্গী",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://purebreed.com.bd"),
+  title: {
+    default: "Purebreed | Honest food, naturally made",
+    template: "%s | Purebreed",
+  },
   description:
-    "Purebreed একটি বিশ্বস্ত অনলাইনভিত্তিক খাদ্যপণ্য সরবরাহকারী প্রতিষ্ঠান। ১০০% প্রাকৃতিক ও নিরাপদ খাদ্যপণ্য এখন আপনার দোরগোড়ায়।",
+    "Shop traceable spices, cold-pressed oils, pickles and pantry essentials made in Bangladesh. Fast delivery, secure checkout and responsive support.",
+  openGraph: {
+    title: "Purebreed | Honest food, naturally made",
+    description: "Traceable spices, cold-pressed oils and small-batch pantry favourites, delivered across Bangladesh.",
+    images: [{ url: "/og.png", width: 1729, height: 910, alt: "Purebreed — Honest food. Naturally made." }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Purebreed | Honest food, naturally made",
+    description: "Traceable spices, cold-pressed oils and small-batch pantry favourites.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="bn" className={`${fraunces.variable} ${manrope.variable} ${hindSiliguri.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${manrope.variable} ${hindSiliguri.variable} ${jetbrainsMono.variable}`}>
       <body>
         <AuthProvider>
           <CartProvider>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            <WishlistProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </WishlistProvider>
           </CartProvider>
         </AuthProvider>
       </body>

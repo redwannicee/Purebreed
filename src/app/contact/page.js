@@ -1,50 +1,5 @@
+import { Factory, Globe2, MessageCircle } from "lucide-react";
 import { CONTACT_INFO } from "@/lib/policyContent";
 
-export const metadata = { title: "Contact — Purebreed" };
-
-export default function ContactPage() {
-  return (
-    <div className="container-px py-14">
-      <div className="mx-auto max-w-xl text-center">
-        <h1 className="text-3xl font-medium">যোগাযোগ করুন</h1>
-        <p className="font-bangla mt-2 text-ink/60">{CONTACT_INFO.tagline}</p>
-
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          <a
-            href={`https://wa.me/${CONTACT_INFO.whatsapp.replace(/[^0-9]/g, "")}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card flex flex-col items-center gap-2 p-6 transition-colors hover:border-leaf"
-          >
-            <span className="text-2xl">💬</span>
-            <span className="font-semibold">WhatsApp</span>
-            <span className="text-sm text-ink/60">{CONTACT_INFO.whatsapp}</span>
-          </a>
-          <a
-            href={CONTACT_INFO.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card flex flex-col items-center gap-2 p-6 transition-colors hover:border-leaf"
-          >
-            <span className="text-2xl">📘</span>
-            <span className="font-semibold">Facebook</span>
-            <span className="text-sm text-ink/60">pureebreed</span>
-          </a>
-        </div>
-
-        <div className="card mt-6 p-6">
-          <span className="text-2xl">🏭</span>
-          <p className="mt-2 font-semibold">Factory Address</p>
-          <a
-            href={CONTACT_INFO.factoryMapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 block text-sm text-ink/60 underline decoration-ink/20 underline-offset-2 hover:text-leaf"
-          >
-            {CONTACT_INFO.factoryAddress}
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-}
+export const metadata = { title: "Contact" };
+export default function ContactPage(){return <div className="container-px py-14"><div className="mx-auto max-w-2xl text-center"><p className="eyebrow">We’re here to help</p><h1 className="section-title mt-2">Talk to Purebreed</h1><p className="font-bangla mt-3 text-ink/55">{CONTACT_INFO.tagline}</p><div className="mt-10 grid gap-4 sm:grid-cols-2"><a href={`https://wa.me/${CONTACT_INFO.whatsapp.replace(/[^0-9]/g,"")}`} target="_blank" rel="noreferrer" className="card flex flex-col items-center gap-2 p-7 transition hover:-translate-y-1 hover:border-leaf hover:shadow-xl"><MessageCircle className="text-leaf" size={28}/><span className="font-bold text-forest">WhatsApp</span><span className="text-sm text-ink/55">{CONTACT_INFO.whatsapp}</span></a><a href={CONTACT_INFO.facebook} target="_blank" rel="noreferrer" className="card flex flex-col items-center gap-2 p-7 transition hover:-translate-y-1 hover:border-leaf hover:shadow-xl"><Globe2 className="text-leaf" size={28}/><span className="font-bold text-forest">Facebook</span><span className="text-sm text-ink/55">pureebreed</span></a></div><div className="card mt-5 p-7"><Factory className="mx-auto text-leaf" size={28}/><p className="mt-3 font-bold text-forest">Factory location</p><a href={CONTACT_INFO.factoryMapUrl} target="_blank" rel="noreferrer" className="mt-1 block text-sm text-ink/55 underline decoration-ink/20 underline-offset-4 hover:text-leaf">{CONTACT_INFO.factoryAddress}</a></div></div></div>}

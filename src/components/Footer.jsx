@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { CONTACT_INFO, POLICY_SECTIONS } from "@/lib/policyContent";
 
 function AccordionItem({ section, isOpen, onToggle }) {
@@ -28,6 +29,9 @@ function AccordionItem({ section, isOpen, onToggle }) {
 
 export default function Footer() {
   const [openId, setOpenId] = useState(null);
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <footer className="bg-forest text-white">
@@ -72,6 +76,8 @@ export default function Footer() {
             <li><Link href="/terms" className="hover:text-white">Terms &amp; Conditions</Link></li>
             <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
             <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
+            <li><Link href="/faq" className="hover:text-white">Help &amp; FAQs</Link></li>
+            <li><Link href="/track-order" className="hover:text-white">Track order</Link></li>
             <li><Link href="/admin/login" className="hover:text-white">Admin</Link></li>
           </ul>
           <div className="mt-6 text-sm text-white/70">

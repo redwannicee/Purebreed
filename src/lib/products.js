@@ -14,7 +14,8 @@ import {
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { db, isFirebaseConfigured } from "./firebase";
+import { DEMO_PRODUCTS } from "./demoProducts";
 
 const productsRef = collection(db, "products");
 
@@ -22,6 +23,7 @@ const productsRef = collection(db, "products");
 // keep this list small per page (see LIMITATIONS in firestore-structure.md)
 // if you outgrow the free tier's 50k reads/day.
 export async function getActiveProducts({ category } = {}) {
+  if (!isFirebaseConfigured) return DEMO_PRODUCTS.filter((p) => !p.isRnD && (!category || category === "all" || p.category === category));
   const clauses = [where("isActive", "==", true), where("isRnD", "==", false)];
   if (category && category !== "all") {
     clauses.push(where("category", "==", category));
@@ -33,6 +35,7 @@ export async function getActiveProducts({ category } = {}) {
 
 // Storefront: "Future / R&D" showcase section.
 export async function getRnDProducts() {
+  if (!isFirebaseConfigured) return DEMO_PRODUCTS.filter((p) => p.isActive && p.isRnD);
   const q = query(
     productsRef,
     where("isActive", "==", true),
@@ -44,6 +47,7 @@ export async function getRnDProducts() {
 }
 
 export async function getProductBySlug(slug) {
+  if (!isFirebaseConfigured) return DEMO_PRODUCTS.find((p) => p.slug === slug) || null;
   const q = query(productsRef, where("slug", "==", slug), where("isActive", "==", true));
   const snap = await getDocs(q);
   if (snap.empty) return null;
@@ -55,6 +59,7 @@ export async function getProductBySlug(slug) {
 // caller is signed in as the admin — see firestore.rules) ---
 
 export async function getAllProductsAdmin() {
+  if (!isFirebaseConfigured) return DEMO_PRODUCTS;
   const q = query(productsRef, orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -85,6 +90,7 @@ export async function getProductById(id) {
 }
 
 export async function countProducts({ activeOnly = false } = {}) {
+  if (!isFirebaseConfigured) return activeOnly ? DEMO_PRODUCTS.filter((p) => p.isActive).length : DEMO_PRODUCTS.length;
   const q = activeOnly ? query(productsRef, where("isActive", "==", true)) : productsRef;
   const snap = await getCountFromServer(q);
   return snap.data().count;

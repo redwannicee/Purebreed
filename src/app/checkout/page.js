@@ -73,6 +73,11 @@ export default function CheckoutPage() {
         notes,
       });
       setConfirmedOrder(order);
+      window.localStorage.setItem("purebreed_last_order", JSON.stringify({
+        orderNumber: order.orderNumber,
+        placedAt: new Date().toISOString(),
+        total,
+      }));
       clear();
     } catch (err) {
       setError("অর্ডার সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
@@ -95,6 +100,7 @@ export default function CheckoutPage() {
         <Link href="/products" className="btn-primary">
           আরও কেনাকাটা করুন
         </Link>
+        <Link href="/track-order" className="btn-secondary">Track this order</Link>
       </div>
     );
   }

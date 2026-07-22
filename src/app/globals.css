@@ -7,7 +7,8 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-sage-50 text-ink font-body antialiased;
+    @apply bg-[#fbfcf9] text-ink font-body antialiased;
+    text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
     @apply font-display;
@@ -34,24 +35,32 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-leaf px-6 py-3
-           text-sm font-semibold text-white transition-colors hover:bg-forest-400
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-leaf px-6 py-3
+           text-sm font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-forest-400 hover:shadow-lg
            disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-forest/15
-           bg-white px-6 py-3 text-sm font-semibold text-forest transition-colors
-           hover:border-leaf hover:text-leaf disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-forest/15
+           bg-white px-6 py-3 text-sm font-bold text-forest transition-all
+           hover:-translate-y-0.5 hover:border-leaf hover:text-leaf hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .input-field {
-    @apply w-full rounded-xl border border-forest/15 bg-white px-4 py-2.5 text-sm text-ink
-           placeholder:text-ink/40 focus:border-leaf;
+    @apply min-h-11 w-full rounded-xl border border-forest/15 bg-white px-4 py-2.5 text-sm text-ink shadow-sm
+           placeholder:text-ink/40 focus:border-leaf focus:ring-2 focus:ring-leaf/10;
   }
 
   .card {
     @apply rounded-xl2 border border-forest/10 bg-white shadow-card;
+  }
+
+  .eyebrow {
+    @apply text-xs font-extrabold uppercase tracking-[0.18em] text-leaf;
+  }
+
+  .section-title {
+    @apply text-3xl font-semibold leading-tight text-forest sm:text-4xl;
   }
 
  /* Small pill badge — kept simple/rounded so text always stays fully

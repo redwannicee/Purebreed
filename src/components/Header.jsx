@@ -2,81 +2,96 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { Heart, Menu, Search, ShoppingBag, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 
 const NAV_LINKS = [
-  { href: "/products", label_en: "Products", label_bn: "পণ্যসমূহ" },
-  { href: "/products?rnd=1", label_en: "Coming Soon", label_bn: "আসছে শীঘ্রই" },
-  { href: "/wholesale", label_en: "Wholesale", label_bn: "পাইকারি" },
-  { href: "/about", label_en: "About", label_bn: "আমাদের সম্পর্কে" },
-  { href: "/contact", label_en: "Contact", label_bn: "যোগাযোগ" },
+  { href: "/products", label: "Shop" },
+  { href: "/products?category=spices", label: "Spices" },
+  { href: "/products?category=oil", label: "Oils" },
+  { href: "/products?category=paste", label: "Pastes" },
+  { href: "/products?rnd=1", label: "R&D Products" },
+  { href: "/wholesale", label: "Wholesale" },
+  { href: "/about", label: "Our story" },
 ];
 
 export default function Header() {
   const { count } = useCart();
+  const { items: wishlist } = useWishlist();
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const pathname = usePathname();
+  const router = useRouter();
+
+  function submitSearch(event) {
+    event.preventDefault();
+    if (query.trim()) router.push(`/products?q=${encodeURIComponent(query.trim())}`);
+  }
+
+  if (pathname.startsWith("/admin")) return null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-forest/10 bg-sage-50/95 backdrop-blur">
-      <div className="container-px flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <Image src="/logo-purebreed.png" alt="Purebreed" width={140} height={70} priority className="h-12 w-auto" />
-        </Link>
-
-        <nav className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-semibold text-forest-700 transition-colors hover:text-leaf"
-            >
-              {link.label_en}
-              <span className="ml-1 font-bangla text-xs font-normal text-forest-700/60">
-                {link.label_bn}
-              </span>
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Link href="/cart" className="btn-secondary relative !px-4">
-            <span aria-hidden>🧺</span>
-            <span className="hidden sm:inline">কার্ট</span>
-            {count > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-turmeric px-1 text-xs font-bold text-white">
-                {count}
-              </span>
-            )}
-          </Link>
-          <button
-            type="button"
-            className="rounded-lg border border-forest/15 p-2 md:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label="Toggle menu"
-          >
-            ☰
-          </button>
-        </div>
+    <>
+      <div className="bg-forest px-4 py-2 text-center text-xs font-semibold text-white">
+        Free delivery over ৳1,500 <span className="mx-2 text-mint">•</span> Cash on delivery available
       </div>
+      <header className="sticky top-0 z-40 border-b border-forest/10 bg-white/95 backdrop-blur-xl">
+        <div className="container-px flex h-20 items-center gap-5">
+          <button type="button" className="rounded-full p-2 md:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
+            <Menu size={22} />
+          </button>
+          <Link href="/" className="shrink-0" aria-label="Purebreed home">
+            <Image src="/logo-purebreed.png" alt="Purebreed" width={285} height={182} priority className="h-14 w-auto" />
+          </Link>
 
-      {open && (
-        <nav className="border-t border-forest/10 bg-sage-50 md:hidden">
-          <div className="container-px flex flex-col gap-1 py-3">
+          <nav className="hidden items-center gap-6 lg:flex">
             {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2 text-sm font-semibold text-forest-700 hover:bg-forest-50"
-              >
-                {link.label_en} <span className="font-bangla text-forest-700/60">· {link.label_bn}</span>
+              <Link key={link.href} href={link.href} className="text-sm font-bold text-forest-700 transition-colors hover:text-leaf">
+                {link.label}
               </Link>
             ))}
+          </nav>
+
+          <form onSubmit={submitSearch} className="ml-auto hidden max-w-sm flex-1 md:block">
+            <label className="relative block">
+              <span className="sr-only">Search products</span>
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/40" size={18} />
+              <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search spices, oils, pickles…" className="input-field !rounded-full !pl-11" />
+            </label>
+          </form>
+
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Link href="/wishlist" className="relative rounded-full p-3 text-forest hover:bg-sage-100" aria-label={`Wishlist with ${wishlist.length} items`}>
+              <Heart size={21} />
+              {wishlist.length > 0 && <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-turmeric px-1 text-[10px] font-bold text-white">{wishlist.length}</span>}
+            </Link>
+            <Link href="/cart" className="relative rounded-full p-3 text-forest hover:bg-sage-100" aria-label={`Cart with ${count} items`}>
+              <ShoppingBag size={22} />
+              {count > 0 && <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-leaf px-1 text-[10px] font-bold text-white">{count}</span>}
+            </Link>
           </div>
-        </nav>
+        </div>
+      </header>
+
+      {open && (
+        <div className="fixed inset-0 z-50 bg-forest/35 backdrop-blur-sm md:hidden" onClick={() => setOpen(false)}>
+          <aside className="h-full w-[86%] max-w-sm bg-white p-5 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <Image src="/logo-purebreed.png" alt="Purebreed" width={285} height={182} className="h-14 w-auto" />
+              <button type="button" className="rounded-full p-2 hover:bg-sage-100" onClick={() => setOpen(false)} aria-label="Close menu"><X size={22} /></button>
+            </div>
+            <form onSubmit={submitSearch} className="mt-6"><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search products…" className="input-field" /></form>
+            <nav className="mt-6 flex flex-col">
+              {NAV_LINKS.map((link) => <Link key={link.href} href={link.href} onClick={() => setOpen(false)} className="border-b border-forest/10 py-4 text-base font-bold text-forest">{link.label}</Link>)}
+              <Link href="/track-order" onClick={() => setOpen(false)} className="border-b border-forest/10 py-4 font-bold text-forest">Track order</Link>
+              <Link href="/faq" onClick={() => setOpen(false)} className="border-b border-forest/10 py-4 font-bold text-forest">Help &amp; FAQs</Link>
+            </nav>
+          </aside>
+        </div>
       )}
-    </header>
+    </>
   );
 }

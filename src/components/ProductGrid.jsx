@@ -1,4 +1,5 @@
 import ProductCard from "./ProductCard";
+import { Sprout } from "lucide-react";
 
 export default function ProductGrid({ products, loading, emptyMessage }) {
   if (loading) {
@@ -14,7 +15,7 @@ export default function ProductGrid({ products, loading, emptyMessage }) {
   if (!products || products.length === 0) {
     return (
       <div className="card flex flex-col items-center gap-2 px-6 py-16 text-center">
-        <span className="text-3xl">🌱</span>
+        <Sprout size={38} className="text-leaf/40" />
         <p className="font-bangla text-sm text-ink/60">
           {emptyMessage || "এই মুহূর্তে কোনো পণ্য পাওয়া যায়নি।"}
         </p>

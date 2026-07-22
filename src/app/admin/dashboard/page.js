@@ -1,82 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, Banknote, Box, Clock3, PackageCheck, ShoppingCart, TrendingUp } from "lucide-react";
 import { countProducts } from "@/lib/products";
 import { countOrdersByStatus, getOrders } from "@/lib/orders";
 import { formatBDT, STATUS_LABELS, STATUS_STYLES } from "@/lib/utils";
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState(null);
-  const [recentOrders, setRecentOrders] = useState([]);
+  const [stats, setStats] = useState({ totalProducts: 0, activeProducts: 0, pendingOrders: 0 });
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    Promise.all([
-      countProducts(),
-      countProducts({ activeOnly: true }),
-      countOrdersByStatus("pending"),
-      getOrders({ pageLimit: 6 }),
-    ])
-      .then(([totalProducts, activeProducts, pendingOrders, orders]) => {
-        if (!active) return;
-        setStats({ totalProducts, activeProducts, pendingOrders });
-        setRecentOrders(orders);
-      })
-      .finally(() => active && setLoading(false));
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  return (
-    <div>
-      <h1 className="text-2xl font-medium">Overview</h1>
-      <p className="text-sm text-ink/50">Quick snapshot of your store.</p>
-
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div className="card p-5">
-          <p className="text-xs font-semibold uppercase text-ink/40">Total products</p>
-          <p className="mt-2 text-3xl font-bold">{loading ? "–" : stats.totalProducts}</p>
-        </div>
-        <div className="card p-5">
-          <p className="text-xs font-semibold uppercase text-ink/40">Active products</p>
-          <p className="mt-2 text-3xl font-bold text-leaf">{loading ? "–" : stats.activeProducts}</p>
-        </div>
-        <div className="card p-5">
-          <p className="text-xs font-semibold uppercase text-ink/40">Pending orders</p>
-          <p className="mt-2 text-3xl font-bold text-turmeric">{loading ? "–" : stats.pendingOrders}</p>
-        </div>
-      </div>
-
-      <div className="mt-8 flex items-center justify-between">
-        <h2 className="font-semibold">Recent orders</h2>
-        <Link href="/admin/orders" className="text-sm font-semibold text-leaf hover:underline">
-          View all →
-        </Link>
-      </div>
-
-      <div className="card mt-3 divide-y divide-forest/10 overflow-hidden">
-        {loading ? (
-          <p className="p-4 text-sm text-ink/50">Loading…</p>
-        ) : recentOrders.length === 0 ? (
-          <p className="p-4 text-sm text-ink/50">No orders yet.</p>
-        ) : (
-          recentOrders.map((order) => (
-            <div key={order.id} className="flex items-center justify-between gap-3 p-4">
-              <div className="min-w-0">
-                <p className="font-mono text-xs text-ink/50">{order.orderNumber}</p>
-                <p className="truncate text-sm font-semibold">{order.customer?.name}</p>
-              </div>
-              <span className="shrink-0 text-sm font-semibold">{formatBDT(order.total)}</span>
-              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[order.status]}`}>
-                {STATUS_LABELS[order.status]}
-              </span>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
+  useEffect(()=>{Promise.all([countProducts(),countProducts({activeOnly:true}),countOrdersByStatus("pending"),getOrders({pageLimit:20})]).then(([totalProducts,activeProducts,pendingOrders,recent])=>{setStats({totalProducts,activeProducts,pendingOrders});setOrders(recent);}).finally(()=>setLoading(false));},[]);
+  const revenue = useMemo(()=>orders.filter((o)=>o.status!=="cancelled").reduce((sum,o)=>sum+(o.total||0),0),[orders]);
+  const delivered = orders.filter((o)=>o.status==="delivered").length;
+  const cards = [["Recent revenue",formatBDT(revenue),Banknote,"text-leaf","Across latest 20 orders"],["Pending orders",stats.pendingOrders,Clock3,"text-turmeric","Needs review or confirmation"],["Active products",stats.activeProducts,PackageCheck,"text-blue-600",`${stats.totalProducts} total catalog items`],["Delivered",delivered,ShoppingCart,"text-purple-600","Across latest 20 orders"]];
+  return <div className="mx-auto max-w-7xl"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-xs font-extrabold uppercase tracking-widest text-leaf">Store health</p><h1 className="mt-1 text-3xl font-semibold text-forest">Good morning</h1><p className="mt-1 text-sm text-ink/50">Here’s what needs your attention today.</p></div><Link href="/admin/products" className="btn-primary !min-h-10 !px-5 !py-2"><Box size={16}/>Add product</Link></div><div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{cards.map(([label,value,Icon,color,note])=><div key={label} className="card p-5"><div className="flex items-start justify-between"><p className="text-xs font-bold uppercase tracking-wider text-ink/40">{label}</p><Icon size={20} className={color}/></div><p className={`mt-3 text-3xl font-extrabold text-forest ${loading?"animate-pulse":""}`}>{loading?"—":value}</p><p className="mt-1 text-xs text-ink/40">{note}</p></div>)}</div><div className="mt-8 grid gap-6 xl:grid-cols-[1.6fr_0.8fr]"><section><div className="flex items-center justify-between"><h2 className="text-lg font-bold text-forest">Recent orders</h2><Link href="/admin/orders" className="flex items-center gap-1 text-sm font-bold text-leaf">View all <ArrowRight size={15}/></Link></div><div className="card mt-3 overflow-hidden"><div className="hidden grid-cols-[1fr_1fr_0.6fr_0.6fr] bg-sage-100 px-5 py-3 text-xs font-bold uppercase tracking-wide text-ink/40 sm:grid"><span>Order</span><span>Customer</span><span>Total</span><span>Status</span></div>{loading?<p className="p-6 text-sm text-ink/45">Loading orders…</p>:orders.length===0?<p className="p-6 text-sm text-ink/45">No orders yet.</p>:orders.slice(0,7).map((order)=><div key={order.id} className="grid gap-2 border-t border-forest/10 px-5 py-4 text-sm sm:grid-cols-[1fr_1fr_0.6fr_0.6fr] sm:items-center"><span className="font-mono text-xs text-ink/50">{order.orderNumber}</span><span className="font-bold text-forest">{order.customer?.name}</span><span className="font-bold">{formatBDT(order.total)}</span><span className={`w-fit rounded-full px-2.5 py-1 text-xs font-bold ${STATUS_STYLES[order.status]}`}>{STATUS_LABELS[order.status]}</span></div>)}</div></section><aside><h2 className="text-lg font-bold text-forest">Quick insights</h2><div className="card mt-3 space-y-5 p-5"><div className="flex gap-3"><TrendingUp className="mt-0.5 text-leaf" size={19}/><div><p className="text-sm font-bold text-forest">Focus on fulfilment</p><p className="mt-1 text-xs leading-5 text-ink/50">Confirm pending orders quickly to keep delivery promises.</p></div></div><div className="flex gap-3"><Box className="mt-0.5 text-turmeric" size={19}/><div><p className="text-sm font-bold text-forest">Keep stock accurate</p><p className="mt-1 text-xs leading-5 text-ink/50">Review low-stock items before promoting them.</p></div></div></div></aside></div></div>;
 }

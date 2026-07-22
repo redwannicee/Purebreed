@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, isFirebaseConfigured } from "@/lib/firebase";
 
 const AuthContext = createContext(null);
 
@@ -11,6 +11,10 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isFirebaseConfigured) {
+      setLoading(false);
+      return undefined;
+    }
     // Only the admin ever signs in — customers use the site as guests —
     // so this listener just answers "is the admin logged in right now?"
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -20,8 +24,10 @@ export function AuthProvider({ children }) {
     return unsub;
   }, []);
 
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
-  const logout = () => signOut(auth);
+  const login = (email, password) => isFirebaseConfigured
+    ? signInWithEmailAndPassword(auth, email, password)
+    : Promise.reject(new Error("Firebase is not configured"));
+  const logout = () => isFirebaseConfigured ? signOut(auth) : Promise.resolve();
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>
