@@ -79,3 +79,37 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Order receipt printing: hide everything on the page except the receipt
+   itself (admin sidebar, buttons, header/footer nav all disappear), then
+   reposition the receipt to fill the printed page cleanly. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-receipt,
+  #printable-receipt * {
+    visibility: visible;
+  }
+  #printable-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  /* Keep the accent table header colored on paper instead of printing
+     it as plain white — most browsers strip backgrounds by default. */
+  #printable-receipt {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 14mm;
+}

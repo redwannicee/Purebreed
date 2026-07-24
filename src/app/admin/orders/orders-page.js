@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Receipt } from "lucide-react";
 import { getOrders, updateOrderStatus } from "@/lib/orders";
 import { formatBDT, ORDER_STATUSES, STATUS_LABELS, STATUS_STYLES } from "@/lib/utils";
+import ReceiptModal from "@/components/ReceiptModal";
 
 const PAYMENT_LABELS = {
   bkash: "bKash",
@@ -11,7 +13,7 @@ const PAYMENT_LABELS = {
   cod: "Cash on Delivery",
 };
 
-function OrderRow({ order, onStatusChange }) {
+function OrderRow({ order, onStatusChange, onViewReceipt }) {
   const [open, setOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
 
@@ -47,6 +49,16 @@ function OrderRow({ order, onStatusChange }) {
 
       {open && (
         <div className="space-y-4 border-t border-forest/10 p-4">
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => onViewReceipt(order)}
+              className="btn-secondary !py-1.5 !px-4 text-xs"
+            >
+              <Receipt size={14} /> View / Print Receipt
+            </button>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <p className="text-xs font-semibold uppercase text-ink/40">Delivery</p>
@@ -110,6 +122,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [receiptOrder, setReceiptOrder] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -152,10 +165,17 @@ export default function AdminOrdersPage() {
           <p className="text-sm text-ink/50">No orders found.</p>
         ) : (
           orders.map((order) => (
-            <OrderRow key={order.id} order={order} onStatusChange={handleLocalStatusChange} />
+            <OrderRow
+              key={order.id}
+              order={order}
+              onStatusChange={handleLocalStatusChange}
+              onViewReceipt={setReceiptOrder}
+            />
           ))
         )}
       </div>
+
+      {receiptOrder && <ReceiptModal order={receiptOrder} onClose={() => setReceiptOrder(null)} />}
     </div>
   );
 }
