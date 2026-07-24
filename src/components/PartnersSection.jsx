@@ -6,9 +6,9 @@ import { Building2, Link2, Globe, ExternalLink } from "lucide-react";
 // or "website" for anything else.
 const PARTNERS = [
   {
-    name: "Partner Company Name",
-    logoUrl: "",
-    link: "https://facebook.com/example",
+    name: "কৃষিসম্ভার অর্গানিক ফুড",
+    logoUrl: "https://drive.google.com/file/d/1N25dRly16F7uUdzBaSuyol-eEKYyWQnw/view?usp=sharing",
+    link: "https://www.facebook.com/BHMVANDER",
     linkType: "facebook",
   },
   {
