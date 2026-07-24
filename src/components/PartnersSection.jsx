@@ -54,7 +54,7 @@ export default function PartnersSection() {
                     src={partner.logoUrl}
                     alt={partner.name}
                     fill
-                    sizes="200px"
+                    sizes="500px"
                     className="object-contain p-3"
                   />
                 ) : (
