@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight, BadgeCheck, FlaskConical, Leaf, PackageCheck, ShieldCheck, Star, Truck } from "lucide-react";
 import ProductGrid from "@/components/ProductGrid";
+import PartnersSection from "@/components/PartnersSection";
 import { getActiveProducts } from "@/lib/products";
 
 const CATEGORY_LINKS = [
@@ -91,6 +92,8 @@ export default function HomePage() {
           <div className="grid grid-cols-2 border-l border-white/10"><div className="border-b border-r border-white/10 p-8"><p className="text-4xl font-semibold text-mint">100%</p><p className="mt-2 text-sm text-white/60">transparent ingredient focus</p></div><div className="border-b border-white/10 p-8"><p className="text-4xl font-semibold text-mint">1–5</p><p className="mt-2 text-sm text-white/60">business days delivery</p></div><div className="border-r border-white/10 p-8"><p className="text-4xl font-semibold text-mint">24h</p><p className="mt-2 text-sm text-white/60">issue reporting support</p></div><div className="p-8"><p className="text-4xl font-semibold text-mint">COD</p><p className="mt-2 text-sm text-white/60">cash on delivery available</p></div></div>
         </div>
       </section>
+
+      <PartnersSection />
     </div>
   );
 }
