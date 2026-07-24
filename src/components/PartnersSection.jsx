@@ -7,7 +7,7 @@ import { Building2, Link2, Globe, ExternalLink } from "lucide-react";
 const PARTNERS = [
   {
     name: "কৃষিসম্ভার অর্গানিক ফুড",
-    logoUrl: "https://drive.google.com/file/d/1N25dRly16F7uUdzBaSuyol-eEKYyWQnw/view?usp=sharing",
+    logoUrl: "https://lh3.googleusercontent.com/d/1N25dRly16F7uUdzBaSuyol-eEKYyWQnw",
     link: "https://www.facebook.com/BHMVANDER",
     linkType: "facebook",
   },
